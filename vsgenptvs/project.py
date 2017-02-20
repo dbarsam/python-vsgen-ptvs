@@ -10,7 +10,7 @@ import uuid
 import errno
 
 from vsgen.project import VSGProject
-from vsgen.ptvs.interpreter import PTVSInterpreter
+from vsgenptvs.interpreter import PTVSInterpreter
 
 
 class PTVSProject(VSGProject):
@@ -55,12 +55,12 @@ class PTVSProject(VSGProject):
     @classmethod
     def from_section(cls, config, section, **kwargs):
         """
-        Creates a :class:`~vsgen.ptvs.interpreter.PTVSProject` from a :class:`~configparser.ConfigParser` section.
+        Creates a :class:`~vsgenptvs.interpreter.PTVSProject` from a :class:`~configparser.ConfigParser` section.
 
         :param ConfigParser config:   A :class:`~configparser.ConfigParser` instance.
         :param str          section:  A :class:`~configparser.ConfigParser` section key.
-        :param              kwargs:   List of additional keyworded arguments to be passed into the :class:`~vsgen.ptvs.project.PTVSProject`.
-        :return:                      A valid :class:`~vsgen.ptvs.project.PTVSProject` instance if succesful; None otherwise.
+        :param              kwargs:   List of additional keyworded arguments to be passed into the :class:`~vsgenptvs.project.PTVSProject`.
+        :return:                      A valid :class:`~vsgenptvs.project.PTVSProject` instance if succesful; None otherwise.
         """
         p = super(PTVSProject, cls).from_section(config, section, **kwargs)
 

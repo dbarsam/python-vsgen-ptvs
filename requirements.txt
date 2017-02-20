@@ -1,8 +1,7 @@
 # ===================================================================
-# VSGen Requirements File
+# VSGen-PTVS Requirements File
 #
 # see http://pip.readthedocs.org/en/stable/user_guide/#requirements-files
 # ===================================================================
-importlib ; python_version <= '2.6'
-configparser ; python_version <= '2.7'
+vsgen
 

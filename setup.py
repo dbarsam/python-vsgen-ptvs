@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-vsgen's setup.py
+vsgen-ptvs's setup.py
 
 For more details see https://packaging.python.org/en/latest/distributing/#setup-args
 """
@@ -11,12 +11,12 @@ from codecs import open
 
 ROOT_PATH = path.abspath(path.dirname(__file__))
 
-if version_info < (3,):
-    INSTALL_REQUIREMENTS = ['configparser']
-else:
-    INSTALL_REQUIREMENTS = []
+INSTALL_REQUIREMENTS = [
+    'vsgen'
+]
 
 TEST_REQUIREMENTS = [
+    'vsgen',
     'pep8'
 ]
 
@@ -39,7 +39,13 @@ CLASSIFIERS = [
 
 ENTRY_POINTS = {
     'console_scripts': [
-        'vsgen = vsgen.__main__:main'
+        'vsgen-ptvs = vsgenptvs.__main__:main'
+    ],
+    'vsgen.suites': [
+        'ptvs = vsgenptvs.suite:PTVSSuite'
+    ],
+    'vsgen.projects': [
+        'ptvs = vsgenptvs.project:PTVSProject'
     ]
 }
 
@@ -52,11 +58,11 @@ CHANGES = open(path.join(ROOT_PATH, 'CHANGES.rst'), encoding='utf-8').read()
 LONG_DESCRIPTION = README + '\n\n' + CHANGES
 
 PACKAGE_DIR = {
-    'vsgen': './vsgen'
+    'vsgenptvs': './vsgenptvs'
 }
 
 PACKAGE_DATA = {
-    'vsgen': ['data/*.*']
+    'vsgenptvs': ['data/*.*']
 }
 
 SCM_VERSION = {
@@ -64,10 +70,10 @@ SCM_VERSION = {
 }
 
 setup(
-    name='vsgen',
-    description='A Microsoft Visual Studio solution and project generator pyackage.',
+    name='vsgenptvs',
+    description='An extension for the VSGen solution and project generator that defines projects and solutions for Python Tools for Visual Studio.',
     long_description=LONG_DESCRIPTION,
-    url='https://github.com/dbarsam/python-vsgen',
+    url='https://github.com/dbarsam/python-vsgen-ptvs',
     author='dbarsam',
     author_email='dbarsam@gmail.com',
     license='MIT',

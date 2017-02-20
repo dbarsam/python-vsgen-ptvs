@@ -5,7 +5,9 @@ VSGDemo VSG Base
 This module provides the neccessary defintions for VSGDemo base python projects and solutions.
 """
 import os
-from vsgen import PTVSProject, VSGSolution
+
+from vsgen import VSGSolution
+from vsgenptvs import PTVSProject
 from vsgendemo.settings import VSGDemoSettings
 
 

@@ -8,11 +8,11 @@ The module defines the class VSGSuite.  The VSGSuite class groups the different 
 import sys
 import os
 import argparse
+import pkg_resources
 
 from vsgen.suite import VSGSuite
 from vsgen.util.config import VSGConfigParser
 from vsgen.util.argparse import DirectoryType
-
 
 class PTVSSuite(VSGSuite):
     """
@@ -20,7 +20,7 @@ class PTVSSuite(VSGSuite):
     """
     __type__ = 'ptvs'
 
-    __template__ = os.path.join(os.path.dirname(sys.modules['vsgen'].__file__), 'data', 'ptvs.cfg')
+    __template__ = pkg_resources.resource_filename('vsgenptvs', 'data/ptvs.cfg')
 
     def __init__(self, **kwargs):
         """
@@ -55,7 +55,7 @@ class PTVSSuite(VSGSuite):
 
         parser.add_argument('--root', metavar='PATH', type=DirectoryType(), help='the project\'s root path')
         parser.add_argument('--name', help='name of the solution and project')
-        parser.add_argument('--filename', metavar='PATH', help='absolute path to the project\;s filename location')
+        parser.add_argument('--filename', metavar='PATH', help='absolute path to the project\'s filename location')
         parser.add_argument('--search_path', metavar='PATH', nargs='*', type=DirectoryType(), help='one or more absolute paths to be added to the python search path.')
         parser.add_argument('--output_path', metavar='PATH', type=DirectoryType(), help='absolute path to the project\'s output directory')
         parser.add_argument('--working_directory', metavar='PATH', type=DirectoryType(), help='absolute path to the project\'s working directory')

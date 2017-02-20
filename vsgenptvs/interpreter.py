@@ -50,12 +50,12 @@ class PTVSInterpreter(VSGRegisterable):
     @classmethod
     def from_section(cls, config, section, **kwargs):
         """
-        Creates a :class:`~vsgen.ptvs.interpreter.PTVSInterpreter` from a :class:`~configparser.ConfigParser` section.
+        Creates a :class:`~vsgenptvs.interpreter.PTVSInterpreter` from a :class:`~configparser.ConfigParser` section.
 
         :param obj config:   A :class:`~configparser.ConfigParser` instance.
         :param str section:  A :class:`~configparser.ConfigParser` section key.
-        :param kwargs:       List of additional keyworded arguments to be passed into the :class:`~vsgen.ptvs.interpreter.PTVSInterpreter`.
-        :return:             A valid :class:`~vsgen.ptvs.interpreter.PTVSInterpreter` instance if succesful; None otherwise.
+        :param kwargs:       List of additional keyworded arguments to be passed into the :class:`~vsgenptvs.interpreter.PTVSInterpreter`.
+        :return:             A valid :class:`~vsgenptvs.interpreter.PTVSInterpreter` instance if succesful; None otherwise.
         """
         if section not in config:
             raise ValueError('Section [{}] not found in [{}]'.format(section, ', '.join(config.sections())))
@@ -77,11 +77,11 @@ class PTVSInterpreter(VSGRegisterable):
     @classmethod
     def from_virtual_environment(cls, directory, **kwargs):
         """
-        Creates a :class:`~vsgen.ptvs.interpreter.PTVSInterpreter` from an Python Virtual Environment in the directory.
+        Creates a :class:`~vsgenptvs.interpreter.PTVSInterpreter` from an Python Virtual Environment in the directory.
 
         :param str directory: The absolute path to the python virtual environment directory.
-        :param kwargs:    List of additional keyworded arguments to be passed into the :class:`~vsgen.ptvs.interpreter.PTVSInterpreter`.
-        :return:          A valid :class:`~vsgen.ptvs.interpreter.PTVSInterpreter` instance if succesful; None otherwise.
+        :param kwargs:    List of additional keyworded arguments to be passed into the :class:`~vsgenptvs.interpreter.PTVSInterpreter`.
+        :return:          A valid :class:`~vsgenptvs.interpreter.PTVSInterpreter` instance if succesful; None otherwise.
         """
         root = os.path.abspath(directory)
         python = os.path.abspath(os.path.join(root, 'Scripts', 'python.exe'))
@@ -143,11 +143,11 @@ class PTVSInterpreter(VSGRegisterable):
     @classmethod
     def from_python_installation(cls, directory, **kwargs):
         """
-        Creates a :class:`~vsgen.ptvs.interpreter.PTVSInterpreter` from an Python installation in the directory.
+        Creates a :class:`~vsgenptvs.interpreter.PTVSInterpreter` from an Python installation in the directory.
 
         :param str directory: The absolute path to the python installation directory.
-        :param kwargs:  List of additional keyworded arguments to be passed into the :class:`~vsgen.ptvs.interpreter.PTVSInterpreter`.
-        :return:          A valid :class:`~vsgen.ptvs.interpreter.PTVSInterpreter` instance if succesful; None otherwise.
+        :param kwargs:  List of additional keyworded arguments to be passed into the :class:`~vsgenptvs.interpreter.PTVSInterpreter`.
+        :return:          A valid :class:`~vsgenptvs.interpreter.PTVSInterpreter` instance if succesful; None otherwise.
         """
         root = os.path.abspath(directory)
         python = os.path.abspath(os.path.join(root, 'python.exe'))
@@ -184,10 +184,10 @@ class PTVSInterpreter(VSGRegisterable):
     @classmethod
     def from_registry_key(cls, keyname):
         """
-        Creates a :class:`~vsgen.ptvs.interpreter.PTVSInterpreter` from a single registry key.
+        Creates a :class:`~vsgenptvs.interpreter.PTVSInterpreter` from a single registry key.
 
         :param str keyname:  The keyname under `HKEY_CURRENT_USER` referring to the environment.
-        :return:         A valid :class:`~vsgen.ptvs.interpreter.PTVSInterpreter` instance if succesful; None otherwise.
+        :return:         A valid :class:`~vsgenptvs.interpreter.PTVSInterpreter` instance if succesful; None otherwise.
         """
         args = {}
         try:
