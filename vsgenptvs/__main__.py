@@ -15,6 +15,7 @@ def make_documentation_parser(**kwargs):
     from vsgen import VSGSuite
     return VSGSuite.make_parser(**kwargs)
 
+
 def main(argv=None):
     """
     The entry point of the script.
