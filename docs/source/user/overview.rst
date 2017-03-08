@@ -1,9 +1,7 @@
 Introduction
-===============
+============
 
-VSGen generates Microsoft Visual Studio Solutions and Projects from Python script or configuration files.
-
-.. note:: Currently only `Python Tools for Visual Studio <https://github.com/Microsoft/PTVS>`_ projects are supported.
+VSGenPTVS is a plugin to the VSGen that generates `Python Tools for Visual Studio <https://github.com/Microsoft/PTVS>`_ projects.
 
 Install
 -------
@@ -11,23 +9,23 @@ The package is designed to work with pip.
 
 To install the package::
 
-   pip install vsgen
+   pip install vsgenptvs
 
 To uninstall the package::
 
-   pip uninstall vsgen
+   pip uninstall vsgenptvs
 
 To upgrade the package::
 
-   pip install --upgrade vsgen
+   pip install --upgrade vsgenptvs
    
 Starting with Python 2.7.9, pip is included by default with the Python binary installers.
 
 Quick Start
 -----------
-To automatically create a solution and project from the command line, use the ``auto`` command::
+VSGenPTVS adds the ``ptvs`` type to VSGen's ``auto`` command::
 
-	vsgen auto <type> <path> <type options>
+	vsgen auto ptvs <type options>
 
 For example, to create a PTVS solution and project pointing at path ``S:\project`` named ``demo``::
 
@@ -35,43 +33,56 @@ For example, to create a PTVS solution and project pointing at path ``S:\project
 
 Usage
 -----
-There are two ways to use vsgen:
+There are two ways to use vsgenptvs:
 
-#. Creating objects explicitly using Python code and invoking the desired functions from within a Python session.
-#. Defining objects using one or more configuration file and processing it with vsgen on the command line.
+#. Creating objects explicitly using Python code and the vsgen base application.
+#. Defining vsgenptvs objects using one or more configuration file and processing it with VSGen on the command line.
     
 Using Python Code
 ~~~~~~~~~~~~~~~~~
-The functionality of vsgen is organised into classes and can be manipulated by Python code.  More information is available on the :doc:`objects` page.
+VSGenPTVS extends the base classes and implementes the interfaces defined in VSGen.  More information is available on the :doc:`objects <objects>` page.
 
 Command Line
 ~~~~~~~~~~~~
 
 Using Configuration Files
 *************************
-Vsgen supports reading in solution and project defintions defined in :mod:`configparser` configuration files.  More information is available on the :doc:`files` page.
-
-.. note:: vsgen processes the configuration file with :class:`~configparser.ExtendedInterpolation` available in Python 3's :mod:`configparser`.  There is a  `configparser <https://pypi.python.org/pypi/configparser>`_ Python 2.7 backport of available on the Python Package Index.
+VSGenPTVS makes the ``ptvs`` type availabel in VSGen's configuration file framework.
 
 Automatic Generation
 ********************
-Vsgen supports automatic generation given a directory and a type.  The type corresponds to a template file in vsgen's ``data`` directory.
+VSGenPTVS makes the ``ptvs`` type availabel in VSGen's auto command line command.
 
 Execution
 ---------
-Vsgen has a simple command line interface.
+VSGenPTVS extends the VSGen command line but also creates an entry point for itself.
 
 You can run it as a module::
 
-	$ python -m vsgen ...
+	$ python -m vsgenptvs ...
     
+which is equivalent to::
+
+	$ python -m vsgenptvs auto ptvs ...
+
 or, when installed with setuptools, run the auto generated entry point in Scripts::
 
-	$ vsgen ...
+	$ vsgenptvs ...
+
+which is equivalent to::
+
+	# vsgen auto ptvs ...
 
 Command Line Reference
 ~~~~~~~~~~~~~~~~~~~~~~
-The complete command line interface is below:
+The complete command line for the ``vsgenptvs`` entry point is below:
+
+.. argparse::
+    :ref: vsgenptvs.__main__.make_documentation_parser
+    :prog: vsgenptvs
+	:nodefault:
+
+The extended command line for the ``vsgen`` interface is below:
 
 .. argparse::
     :ref: vsgen.__main__.make_documentation_parser
@@ -81,4 +92,4 @@ The complete command line interface is below:
 Getting help
 ------------
 
-Check out the :doc:`FAQ <faq>` or submit a bug report to the `Github issue tracker <https://github.com/dbarsam/python-vsgen/issues>`_.
+Check out the :doc:`FAQ <faq>` or submit a bug report to the `Github issue tracker <https://github.com/dbarsam/python-vsgen-ptvs/issues>`_.

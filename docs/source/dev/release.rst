@@ -2,7 +2,7 @@
 Release Process
 ===============
 
-This process describes the steps to execute the automated release workflow for `vsgen`.  This workflow consists of:
+This process describes the steps to execute the automated release workflow for ``vsgen-ptvs``.  This workflow consists of:
 
 #. A new release being generated on GitHub.
 #. The release built and validated by `AppVeyor`_.
@@ -70,7 +70,7 @@ Build
 
     $ python setup.py sdist bdist_wheel
     $ ls dist/
-    vsgen-a.b.c-py2.py3-none-any.whl vsgen-a.b.c.tar.gz
+    vsgen-ptvs-a.b.c-py2.py3-none-any.whl vsgen-ptvs-a.b.c.tar.gz
 
 #. Install the source distribution:
 
@@ -78,18 +78,18 @@ Build
 
    .. code-block:: bat
 
-    $ rm -rf %TEMP%\vsgen-sdist
+    $ rm -rf %TEMP%\vsgen-ptvs-sdist
 
    Create a virtual environment and install the distribution:
 
    .. code-block:: bat
 
-    $ virtualenv %TEMP%\vsgen-sdist
-    $ %TEMP%\vsgen-sdist\activate
-    (vsgen-sdist) $ pip install .\dist\vsgen-a.b.c.zip
-    (vsgen-sdist) $ python
-    >>> import vsgen
-    >>> vsgen.__version__
+    $ virtualenv %TEMP%\vsgen-ptvs-sdist
+    $ %TEMP%\vsgen-ptvs-sdist\activate
+    (vsgen-ptvs-sdist) $ pip install .\dist\vsgen-ptvs-a.b.c.zip
+    (vsgen-ptvs-sdist) $ python
+    >>> import vsgenptvs
+    >>> vsgenptvs.__version__
     'a.b.c'
 
 #. Instal the wheel distribution:
@@ -98,18 +98,18 @@ Build
 
    .. code-block:: bat
 
-    $ rm -rf %TEMP%\vsgen-wheel
+    $ rm -rf %TEMP%\vsgen-ptvs-wheel
 
    Create a virtual environment and install the distribution:
 
    .. code-block:: bat
 
-    $ virtualenv %TEMP%\vsgen-wheel
-    $ %TEMP%\vsgen-wheel\activate
-    (vsgen-wheel) $ pip install .\dist\vsgen-a.b.c-py2.py3-none-any.whl
-    (vsgen-wheel) $ python
-    >>> import vsgen
-    >>> vsgen.__version__
+    $ virtualenv %TEMP%\vsgen-ptvs-wheel
+    $ %TEMP%\vsgen-ptvs-wheel\activate
+    (vsgen-ptvs-wheel) $ pip install .\dist\vsgen-ptvs-a.b.c-py2.py3-none-any.whl
+    (vsgen-ptvs-wheel) $ python
+    >>> import vsgenptvs
+    >>> vsgenptvs.__version__
     'a.b.c'
 
 Release
@@ -117,7 +117,7 @@ Release
 
 #. Sync the local branch with the remote master branch and verify that the `Appveyor`_ dashboard is passing.
 
-#. Navigate to vsgen's `release page`_ and draft a new release:
+#. Navigate to ``vsgen-ptvs``'s `release page`_ and draft a new release:
    
    #. Give the release a title (`Feature Release`, `Maintenance Release`, etc.).
    #. Tag with the appropriate version as described in :file:`CHANGES.txt`.
@@ -127,35 +127,35 @@ Release
    #. Verify that the `Appveyor`_ dashboard is green and has published the package to `PyPI`_.
    #. Verify that the `Read the Docs`_ is updated.
 
-#. Check if the package is displayed correctly: https://pypi.python.org/pypi/vsgen
+#. Check if the package is displayed correctly: https://pypi.python.org/pypi/vsgen-ptvs
 
 Post release
 ============
 
-Finally instal vsgen one last time:
+Finally instal ``vsgen-ptvs`` one last time:
 
    Ensure clean state if ran repeatedly:
 
    .. code-block:: bat
 
-    $ rm -rf %TEMP%\vsgen-pip
+    $ rm -rf %TEMP%\vsgen-ptvs-pip
 
    Create a virtual environment and install the distribution:
    
    .. code-block:: bat
    
-    $ virtualenv %TEMP%\vsgen-pip
-    $ %TEMP%\vsgen-pip\activate
-    (vsgen-pip) $ pip install -U vsgen
-    (vsgen-pip) $ python
-    >>> import vsgen
-    >>> vsgen.__version__
+    $ virtualenv %TEMP%\vsgen-ptvs-pip
+    $ %TEMP%\vsgen-ptvs-pip\activate
+    (vsgen-ptvs-pip) $ pip install -U vsgen-ptvs
+    (vsgen-ptvs-pip) $ python
+    >>> import vsgenptvs
+    >>> vsgenptvs.__version__
     'a.b.c'
 
 .. _pypi: https://pypi.python.org/pypi
 .. _wheel: https://pypi.python.org/pypi/wheel
-.. _read the docs: http://vsgen.readthedocs.org/en/latest/
-.. _appveyor: https://ci.appveyor.com/project/DBarsam/python-vsgen
-.. _release page: https://github.com/dbarsam/python-vsgen/releases
-.. _tickets for the next version: https://github.com/dbarsam/python-vsgen/issues?q=is%3Aopen+is%3Aissue
-.. _github compare: https://github.com/dbarsam/python-vsgen/compare
+.. _read the docs: http://vsgen-ptvs.readthedocs.org/en/latest/
+.. _appveyor: https://ci.appveyor.com/project/DBarsam/python-vsgen-ptvs
+.. _release page: https://github.com/dbarsam/python-vsgen-ptvs/releases
+.. _tickets for the next version: https://github.com/dbarsam/python-vsgen-ptvs/issues?q=is%3Aopen+is%3Aissue
+.. _github compare: https://github.com/dbarsam/python-vsgen-ptvs/compare

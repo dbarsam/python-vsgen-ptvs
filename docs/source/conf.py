@@ -35,7 +35,7 @@ rtd = os.environ.get('READTHEDOCS', None) == 'True'
 # (so it skips that step). Calling apidoc here instead if we're being built
 # there.
 if rtd:
-    os.system("sphinx-apidoc --no-toc --separate --private -o {} {}".format(os.path.join(docroot, 'apidoc'), os.path.join(pkgroot, 'vsgen')))
+    os.system("sphinx-apidoc --no-toc --separate --private -o {} {}".format(os.path.join(docroot, 'apidoc'), os.path.join(pkgroot, 'vsgenptvs')))
 
 # -- Mock -----------------------------------------------------------------
 
@@ -90,7 +90,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'vsgen'
+project = 'vsgenptvs'
 author = 'dbarsam'
 copyright = '{}, {}'.format(datetime.date.today().year, author)
 
@@ -251,7 +251,7 @@ html_static_path = ['_static']
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'vsgendoc'
+htmlhelp_basename = 'vsgenptvsdoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -273,7 +273,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'vsgen.tex', 'vsgen Documentation',
+    (master_doc, 'vsgenptvs.tex', 'vsgenptvs Documentation',
      'dbarsam', 'manual'),
 ]
 
@@ -303,7 +303,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'vsgen', 'vsgen Documentation',
+    (master_doc, 'vsgenptvs', 'vsgenptvs Documentation',
      [author], 1)
 ]
 
@@ -317,8 +317,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'vsgen', 'vsgen Documentation',
-     author, 'vsgen', 'One line description of project.',
+    (master_doc, 'vsgenptvs', 'vsgenptvs Documentation',
+     author, 'vsgenptvs', 'One line description of project.',
      'Miscellaneous'),
 ]
 

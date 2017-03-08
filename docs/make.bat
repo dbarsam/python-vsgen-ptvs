@@ -87,7 +87,7 @@ if "%1" == "view" (
 )
 
 if "%1" == "rst" (
-    %SPHINXAPIDOC% --no-toc --separate --private -o %DOCSDIR%\source\apidoc %DOCSDIR%\..\vsgen
+    %SPHINXAPIDOC% --no-toc --separate --private -o %DOCSDIR%\source\apidoc %DOCSDIR%\..\vsgenptvs
 	if errorlevel 1 exit /b 1
 	echo.
 	echo.Build finished. The *.rst are in .\source\apidoc.
@@ -149,9 +149,9 @@ if "%1" == "qthelp" (
 	echo.
 	echo.Build finished; now you can run "qcollectiongenerator" with the ^
 .qhcp project file in %BUILDDIR%\qthelp, like this:
-	echo.^> qcollectiongenerator %BUILDDIR%\qthelp\vsgen.qhcp
+	echo.^> qcollectiongenerator %BUILDDIR%\qthelp\vsgenptvs.qhcp
 	echo.To view the help file:
-	echo.^> assistant -collectionFile %BUILDDIR%\qthelp\vsgen.ghc
+	echo.^> assistant -collectionFile %BUILDDIR%\qthelp\vsgenptvs.ghc
 	goto end
 )
 

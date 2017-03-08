@@ -1,114 +1,25 @@
 Configuration Files
 ===================
 
-vsgen can automatically instantiate and execute any :doc:`objects` defined in a :mod:`configparser` configuration file.
+VSGen can use configuration files as input to its generation process.
 
-.. note:: vsgen processes the configuration file with :class:`~configparser.ExtendedInterpolation` available in Python 3's :mod:`configparser`.  There is a  `configparser <https://pypi.python.org/pypi/configparser>`_ Python 2.7 backport of available on the Python Package Index.
-
-Format
-------
-
-vsgen uses :class:`~configparser.ConfigParser` to read the configuration files so any fille adherin to this standard (a ``setup.cfg`` file, or ``tox.ini``, or a ``vsgen.cfg``) will work.  Sections are introduced by a ``[section]`` header, and contain ``name = value`` entries.  Lines beginning with ``#`` or ``;`` are ignored as comments.
-
-Main Section
-~~~~~~~~~~~~
-vsgen will look for a ``[vsgen]`` section and uses it as an entry point.
-
-Object Sections
-~~~~~~~~~~~~~~~
-vsgen objects are defined in other sections and, out of convention, the sections follow naming pattern ``[vsgen.*]``.
-
+VSGenPTVS defines additional section and options in a VSGen configuration file.
 
 Sections
 --------
 
-Main Section
-~~~~~~~~~~~~
-VSgen requires a single ``[vsgen]`` section and uses it as an entry point.
-
-The following options are options global to the vsgen session.
-
-Options
-^^^^^^^
-.. contents::
-   :local:
-   :depth: 2
-
-root
-````
-A path (relative to the configuration file itself) that is used as a root path.
-
-Solution Sections
-~~~~~~~~~~~~~~~~~~
-The naming convention for a solution section is the follow the ``[vsgen.solution.*]`` pattern.
-
-Each solution section represents one solution file ``.sln`` and the following options are exposed to define the file.
-
-Options
-^^^^^^^
-.. contents::
-   :local:
-   :depth: 2
-
-name
-````
-The display name of the solution.
-
-filename
-````````
-The absolute path of the `.sln` file.
-
-projects
-````````
-The comma separated list of sections that define projects.
-
-visual_studio_version
-`````````````````````
-The Visual Studio version number as a float.  E.g `12.0` for Visual Studio 2013, `14.0` for Visual Studio 2015, etc.  For a full table, consult the enter on `Wikipedia <https://en.wikipedia.org/wiki/Microsoft_Visual_Studio#History>`_.
-
 Project Sections
 ~~~~~~~~~~~~~~~~
-The naming convention for a project section is to follow the ``[vsgen.project.*]`` pattern.
+A `Python Tools for Visual Studio`_ project is identified by the ``ptvs`` type.
 
-Unlike the solution section a project section can represent one of many projects types.  The type is controlled by a special ``type`` option this controls which options are read or ignored in the project section.
+   .. code-block:: ini
 
-common options
-^^^^^^^^^^^^^^
-.. contents::
-   :local:
-   :depth: 2
-
-name
-````
-The display name of the project.
-
-type
-````
-The vsgen project type.  This value describes which project object vsgen will contruct and how the other values in this section are interpreted.
-
-filename
-````````
-The absolute path of the ``.proj`` file.
-
-working_directory
-`````````````````
-The absolute path of the project's working directory.
-
-output_path
-```````````
-The absolute path of the project's output directory.
-
-root_namespace
-``````````````
-The fully qualified name space.
-
-project_home 
-````````````
-The absolute path of the project's home directory.
+	[vsgen.project.example]
+	type = ptvs
 
 ptvs options
 ^^^^^^^^^^^^
-A Python Tools for Visual Studio project uses the following extra options.
+A `Python Tools for Visual Studio`_ project uses the following extra options.
 
 .. contents::
    :local:
@@ -176,7 +87,7 @@ The comma separated list of sections that define Python virtual environments use
 
 Interpreter Section
 ~~~~~~~~~~~~~~~~~~~
-A Python Tools for Visual Studio project uses one of more Python Interpreters.  Each interpretter could by a stanrad Python installation or a Pytyon virtual environment; however all interpreters are managed outside of Visual Studio and the projects include them as section references.
+A `Python Tools for Visual Studio`_ project uses one of more Python Interpreters.  Each interpretter could by a stanrad Python installation or a Pytyon virtual environment; however all interpreters are managed outside of Visual Studio and the projects include them as section references.
 
 If the interpreter is a standard python interpreter the naming convention is ``[pyvsgen.interpreter.*]``.
 
@@ -188,7 +99,7 @@ If the interpreter is a virtual environment the naming convention is ``[vsgen.vi
 
 Interpreter Options
 ^^^^^^^^^^^^^^^^^^^
-A Python Tools for Visual Studio interpreter uses the following extra options.
+A `Python Tools for Visual Studio`_ interpreter uses the following extra options.
 
 interpreter_paths
 `````````````````
@@ -200,7 +111,7 @@ The display description of the environment.
 
 Virtual Environment options
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-A Python Tools for Visual Studio virtual environment uses the following extra options.
+A `Python Tools for Visual Studio`_ virtual environment uses the following extra options.
 
 environment_paths
 `````````````````
@@ -216,3 +127,4 @@ The vsgen test suite contains an working example of a configuration file.  The f
 
 .. literalinclude:: ..\..\..\tests\data\vsgencfg\setup.cfg
 
+.. _Python Tools for Visual Studio: https://github.com/Microsoft/PTVS
