@@ -15,7 +15,7 @@ VSGenPTVS extends the base :class:`~vsgen.project.VSGProject` with the :class:`~
 
 Suites
 ------
-Suites are user defined groupings of solutions and projects.  VSGenPTVS extends the base :class:`~vsgen.project.VSGSuite` with the :class:`~vsgenptvs.project.PTVSSuite` class.  The :class:`~vsgenptvs.project.PTVSSuite` class defines a simple solution and ``.pyproj`` project pair.
+Suites are user defined groupings of solutions and projects.  VSGenPTVS extends the base :class:`~vsgen.suite.VSGSuite` with the :class:`~vsgenptvs.suite.PTVSSuite` class.  The :class:`~vsgenptvs.suite.PTVSSuite` class defines a simple solution and ``.pyproj`` project pair.
 
 Other Classes
 -------------
