@@ -8,12 +8,12 @@ import sys
 import argparse
 
 
-def make_documentation_parser(**kwargs):
+def make_parser(**kwargs):
     """
-    Generates the application's :class:`~argparse.ArgumentParser` instance for the documentation generator `sphinx-argparse <https://sphinx-argparse.readthedocs.io>`_
+    Generates the application's :class:`~argparse.ArgumentParser` instance.
     """
-    from vsgen import VSGSuite
-    return VSGSuite.make_parser(**kwargs)
+    from vsgenptvs.suite import PTVSSuite
+    return PTVSSuite.make_parser(**kwargs)
 
 
 def main(argv=None):
@@ -26,6 +26,10 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv
 
+    # Validate arguments
+    args = make_parser(description='Executes the vsgenptvs package as an application.').parse_args(argv[1:])
+
+    # But modify them to work with the vsgen
     argv.insert(1, 'auto')
     argv.insert(2, 'ptvs')
     return __main__.main(argv)

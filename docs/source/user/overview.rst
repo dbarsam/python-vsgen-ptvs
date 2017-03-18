@@ -63,31 +63,38 @@ You can run it as a module::
     
 which is equivalent to::
 
-	$ python -m vsgenptvs auto ptvs ...
+	$ python -m vsgen auto ptvs ...
 
-or, when installed with setuptools, run the auto generated entry point in Scripts::
+Or, when installed with setuptools, run the auto generated entry point in Scripts::
 
-	$ vsgenptvs ...
+	$ vsgen-ptvs ...
 
 which is equivalent to::
 
-	# vsgen auto ptvs ...
+	$ vsgen auto ptvs ...
 
 Command Line Reference
 ~~~~~~~~~~~~~~~~~~~~~~
-The complete command line for the ``vsgenptvs`` entry point is below:
+
+VSGenPTVS extends the existing VSGen command line but also provides its own command line handling.
+
+VSGenPTVS Standalone
+********************
+When the ``vsgenptvs`` package is executed it passes the arguments to the command ``vsgen auto ptvs``  and presents the command line of that command as its own:
 
 .. argparse::
-    :ref: vsgenptvs.__main__.make_documentation_parser
+    :ref: vsgenptvs.__main__.make_parser
     :prog: vsgenptvs
-	:nodefault:
 
-The extended command line for the ``vsgen`` interface is below:
+
+VSGen Command Line Integration
+******************************
+When ``vsgenptvs`` is installed, ``vsgen``'s command line is modified accordingly:
 
 .. argparse::
     :ref: vsgen.__main__.make_documentation_parser
     :prog: vsgen
-	:nodefault:
+
 
 Getting help
 ------------
