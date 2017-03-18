@@ -5,7 +5,6 @@ vsgen-ptvs's setup.py
 For more details see https://packaging.python.org/en/latest/distributing/#setup-args
 """
 from os import path
-from sys import version_info
 from setuptools import setup, find_packages
 from codecs import open
 
@@ -70,7 +69,7 @@ SCM_VERSION = {
 }
 
 setup(
-    name='vsgenptvs',
+    name='vsgen-ptvs',
     description='An extension for the VSGen solution and project generator that defines projects and solutions for Python Tools for Visual Studio.',
     long_description=LONG_DESCRIPTION,
     url='https://github.com/dbarsam/python-vsgen-ptvs',
