@@ -16,6 +16,7 @@ This documentation was built from the |version| (|release|) snapshot of the code
    user/overview
    user/objects
    user/files
+   user/faq
 
 .. _dev-docs:
 .. toctree::

@@ -1,9 +1,16 @@
 FAQ
 ===
 
-**Q: This doesn't do what I expected.**
+**Q: How does this make Python Tools for Visual Studio projects`?**
 
-Fair enough.  I've already mentioned `Premake <https://premake.github.io/>`_ but as far as I can tell there are two other Python package that generate Visual Studio solution and projects:
+The `vsgenptvs`_ Python package is a plugin to another package, `vsgen`_, and contains the metadata and code to generate `Python Tools for Visual Studio`_ projects. 
 
-#. `makeprojects <https://pypi.python.org/pypi/makeprojects>`_ 
-#. `ideskeleton <https://pypi.python.org/pypi/ideskeleton>`_
+The ``vsgenptvs`` Python packages labels all of its information with a ``ptvs`` reference tag and makes this tag dicoverable to ``vsgen``.  When ``vsgen`` and ``vsgenptvs`` are installed into the same Python environment, ``vsgen`` has can discover all of the ``ptvs`` information and build the projects (another other items) accordingly.
+
+**Q: Do I need to install vsgen separately?**
+
+Not if you're using pip.  Pip will install everything for you.  If you're doing something else, then yes, maybe.
+
+.. _vsgen: https://pypi.python.org/pypi/vsgen
+.. _vsgenptvs: https://pypi.python.org/pypi/vsgen-ptvs
+.. _Python Tools for Visual Studio: https://github.com/Microsoft/PTVS
