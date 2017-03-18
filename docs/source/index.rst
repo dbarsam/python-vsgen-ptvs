@@ -4,7 +4,7 @@ vsgen-ptvs
 
 `vsgen-ptvs`_ is a plugin to `vsgen`_ that generates `Python Tools for Visual Studio`_ projects.
 
-It is supported on Python versions 2.7, 3.3, 3.4, and 3.5 and the code is open source, `available on github`_.
+It is supported on Python versions 2.7, 3.3, 3.4, 3.5, and 3.6 and the code is open source, `available on github`_.
 
 This documentation was built from the |version| (|release|) snapshot of the code.
 
@@ -42,6 +42,5 @@ Indices and tables
 
 .. _vsgen: https://pypi.python.org/pypi/vsgen
 .. _vsgenptvs: https://pypi.python.org/pypi/vsgen-ptvs
-.. _premake: https://premake.github.io/
 .. _Python Tools for Visual Studio: https://github.com/Microsoft/PTVS
 .. _available on github: https://github.com/dbarsam/python-vsgen-ptvs
