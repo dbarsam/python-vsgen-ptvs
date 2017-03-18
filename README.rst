@@ -1,7 +1,7 @@
 ==========
 vsgen-ptvs
 ==========
-|build-status| |docs| |pypi-version| |pypi-license| |python-2| |python-3|
+|build-status| |docs| |dependencies| |pypi-version| |pypi-license| |python-2| |python-3|
 
 A Python package that extends vsgen_ with solutions and project defintions for `Python Tools for Visual Studio`_.
 
@@ -35,10 +35,14 @@ Use the `issue tracker <https://github.com/dbarsam/python-vsgen-ptvs/issues>`_ t
     :scale: 100%
     :target: https://ci.appveyor.com/project/dbarsam/python-vsgen-ptvs
 
-.. |docs| image:: https://readthedocs.org/projects/vsgen-ptvs/badge/?version=latest
+.. |docs| image:: https://readthedocs.org/projects/vsgen-ptvs/badge/?version=stable
     :alt: Documentation Status
     :scale: 100%
     :target: http://vsgen-ptvs.readthedocs.org/en/latest/
+
+.. |dependencies| image:: https://img.shields.io/requires/github/dbarsam/python-vsgen-ptvs.svg
+    :target: https://requires.io/github/dbarsam/python-vsgen-ptvs/requirements/
+    :alt: Dependencies
 
 .. |pypi-version| image:: http://img.shields.io/pypi/v/vsgen-ptvs.svg
     :alt: PyPI Version
