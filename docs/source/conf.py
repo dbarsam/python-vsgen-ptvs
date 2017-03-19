@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# vsgen documentation build configuration file, created by
+# vsgen-ptvs documentation build configuration file, created by
 # sphinx-quickstart on Thu Feb  4 23:23:51 2016.
 #
 # This file is execfile()d with the current directory set to its
@@ -35,7 +35,7 @@ rtd = os.environ.get('READTHEDOCS', None) == 'True'
 # (so it skips that step). Calling apidoc here instead if we're being built
 # there.
 if rtd:
-    os.system("sphinx-apidoc --no-toc --separate --private -o {} {}".format(os.path.join(docroot, 'apidoc'), os.path.join(pkgroot, 'vsgenptvs')))
+    os.system("sphinx-apidoc --no-toc --separate --private -o {} {}".format(os.path.join(docroot, 'apidoc'), os.path.join(pkgroot, 'vsgen-ptvs')))
 
 # -- Mock -----------------------------------------------------------------
 
@@ -90,7 +90,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'vsgenptvs'
+project = 'vsgen-ptvs'
 author = 'dbarsam'
 copyright = '{}, {}'.format(datetime.date.today().year, author)
 
@@ -273,7 +273,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'vsgenptvs.tex', 'vsgenptvs Documentation',
+    (master_doc, 'vsgen-ptvs.tex', 'vsgen-ptvs Documentation',
      'dbarsam', 'manual'),
 ]
 
@@ -303,7 +303,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'vsgenptvs', 'vsgenptvs Documentation',
+    (master_doc, 'vsgen-ptvs', 'vsgen-ptvs Documentation',
      [author], 1)
 ]
 
@@ -317,8 +317,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'vsgenptvs', 'vsgenptvs Documentation',
-     author, 'vsgenptvs', 'One line description of project.',
+    (master_doc, 'vsgen-ptvs', 'vsgen-ptvs Documentation',
+     author, 'vsgen-ptvs', 'One line description of project.',
      'Miscellaneous'),
 ]
 
