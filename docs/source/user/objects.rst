@@ -13,6 +13,8 @@ Projects
 
 VSGenPTVS extends the base :class:`~vsgen.project.VSGProject` with the :class:`~vsgenptvs.project.PTVSProject` class that represents a `Python Tools for Visual Studio`_ ``.pyproj`` project file.
 
+This project class implements the :class:`~vsgen.writer.VSGWritable` interface and uses a :class:`~vsgen.writer.VSGJinjaRenderer` to write the ``.pyproj`` file from an internal template ``vsgenptvs\data\pyproj.jinja``
+
 Suites
 ------
 Suites are user defined groupings of solutions and projects.  VSGenPTVS extends the base :class:`~vsgen.suite.VSGSuite` with the :class:`~vsgenptvs.suite.PTVSSuite` class.  The :class:`~vsgenptvs.suite.PTVSSuite` class defines a simple solution and ``.pyproj`` project pair.
