@@ -34,6 +34,7 @@ def main(argv=None):
     argv.insert(2, 'ptvs')
     return __main__.main(argv)
 
+
 if __name__ == "__main__":
     # To use this package as an application we need to correct the sys.path
     module_path = os.path.dirname(os.path.realpath(__file__))
