@@ -5,6 +5,7 @@ vsgen-ptvs's setup.py
 For more details see https://packaging.python.org/en/latest/distributing/#setup-args
 """
 from os import path
+from sys import version_info
 from setuptools import setup, find_packages
 from codecs import open
 
