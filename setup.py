@@ -29,7 +29,7 @@ if version_info[0] == 3:
 else:
     SETUP_REQUIREMENTS = []
 
-SETUP_REQUIREMENTS = [
+SETUP_REQUIREMENTS += [
     'setuptools-pep8',
     'setuptools-lint',
     'setuptools_scm'
