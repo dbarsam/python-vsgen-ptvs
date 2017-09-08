@@ -56,18 +56,19 @@ class PTVSInterpreter(VSGRegisterable):
         :param str section:  A :class:`~configparser.ConfigParser` section key.
         :param kwargs:       List of additional keyworded arguments to be passed into the :class:`~vsgenptvs.interpreter.PTVSInterpreter`.
         :return:             A valid :class:`~vsgenptvs.interpreter.PTVSInterpreter` instance if succesful; None otherwise.
+        :note:               This function interprets the section either as a python interpreter or a virtual environment, not both.
         """
         if section not in config:
             raise ValueError('Section [{}] not found in [{}]'.format(section, ', '.join(config.sections())))
 
         interpreters = []
-        interpreter_paths = config.getdirs(section, 'interpreter_paths', fallback=[])
-        if interpreter_paths:
-            interpreters.extend([PTVSInterpreter.from_python_installation(p, **kwargs) for p in interpreter_paths])
 
+        interpreter_paths = config.getdirs(section, 'interpreter_paths', fallback=[])
         environment_paths = config.getdirs(section, 'environment_paths', fallback=[])
-        if environment_paths:
-            interpreters = [PTVSInterpreter.from_virtual_environment(p, **kwargs) for p in environment_paths]
+        if interpreter_paths:
+            interpreters = filter(None, [PTVSInterpreter.from_python_installation(p, **kwargs) for p in interpreter_paths])
+        elif environment_paths:
+            interpreters = filter(None, [PTVSInterpreter.from_virtual_environment(p, **kwargs) for p in environment_paths])
 
         for i in interpreters:
             i.Description = config.get(section, 'description', fallback=i.Description)
