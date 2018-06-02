@@ -71,7 +71,7 @@ class PTVSProject(VSGProject, VSGWritable, VSGRegisterable, VSGJinjaRenderer):
         p.IsWindowsApplication = config.getboolean(section, 'is_windows_application', fallback=p.IsWindowsApplication)
         p.EnvironmentVariables = config.getlist(section, 'environment_variables', fallback=p.EnvironmentVariables, delimiters='')
         p.PythonInterpreterArgs = config.getlist(section, 'python_interpreter_args', fallback=p.PythonInterpreterArgs)
-        
+
         environment_sections = [es for es in p.EnvironmentVariables if config.has_section(es)]
         for es in environment_sections:
             p.EnvironmentVariables.remove(es)
