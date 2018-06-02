@@ -12,7 +12,7 @@ Project Sections
 ~~~~~~~~~~~~~~~~
 A `Python Tools for Visual Studio`_ project is identified by the ``ptvs`` type.
 
-   .. code-block:: ini
+.. code-block:: ini
 
 	[vsgen.project.example]
 	type = ptvs
@@ -69,6 +69,10 @@ is_windows_application
 ``````````````````````
 Flag denoting if we're using python.exe or pythonw.exe as a launcher.
 
+environment_variables
+`````````````````````
+A list of `NAME=VALUE` environment variables or sections that define other `NAME=VALUE` environment variables.
+
 python_interpreter
 ``````````````````
 The section defining the selected Python interpreters of this project.
@@ -121,6 +125,19 @@ description
 ```````````
 The display description of the interpreter.
 
+Environment Section
+~~~~~~~~~~~~~~~~~~~
+A section that defines the environment variables for the project.  
+
+The section follows the naming convention ``[vsgen.environment.*]`` and each option and value are treated as `NAME=VALUE` environment variables to be applied by a project during execution.
+
+For example, the following defines an Environment Section `vsgen.environment.project` with the Python environment variable PYTHONDONTWRITEBYTECODE_.
+
+.. code-block:: ini
+
+	[vsgen.environment.project]
+	PYTHONDONTWRITEBYTECODE=1
+
 Example
 -------
 The vsgen test suite contains an working example of a configuration file.  The file is available below and at :download:`setup.cfg <..\\..\\..\\tests\\data\\vsgencfg\\setup.cfg>`
@@ -128,3 +145,4 @@ The vsgen test suite contains an working example of a configuration file.  The f
 .. literalinclude:: ..\..\..\tests\data\vsgencfg\setup.cfg
 
 .. _Python Tools for Visual Studio: https://github.com/Microsoft/PTVS
+.. _PYTHONDONTWRITEBYTECODE: https://docs.python.org/3/using/cmdline.html#envvar-PYTHONDONTWRITEBYTECODE

@@ -20,6 +20,7 @@
     <ProjectTypeGuids>{888888A0-9F3D-457C-B088-3A5042F75D52}</ProjectTypeGuids>
     <RootNamespace>{{pyproj.RootNamespace}}</RootNamespace>
     <IsWindowsApplication>{{pyproj.IsWindowsApplication}}</IsWindowsApplication>
+    <Environment>{{pyproj.EnvironmentVariables|join('\n')}}</Environment>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
 {% if pyproj.ProjectInterpreterDefault: %}
     <InterpreterId>{{pyproj.ProjectInterpreterDefault.GUID|MSGUID}}</InterpreterId>

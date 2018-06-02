@@ -57,7 +57,7 @@ class PTVSSuite(VSGSuite):
         parser.add_argument('--root', metavar='PATH', type=DirectoryType(), help='the project\'s root path')
         parser.add_argument('--name', help='name of the solution and project')
         parser.add_argument('--filename', metavar='PATH', help='absolute path to the project\'s filename location')
-        parser.add_argument('--search_path', metavar='PATH', nargs='*', type=DirectoryType(), help='one or more absolute paths to be added to the python search path.')
+        parser.add_argument('--search_path', metavar='PATH', nargs='*', type=DirectoryType(), help='one or more absolute paths to be added to the python search path')
         parser.add_argument('--output_path', metavar='PATH', type=DirectoryType(), help='absolute path to the project\'s output directory')
         parser.add_argument('--working_directory', metavar='PATH', type=DirectoryType(), help='absolute path to the project\'s working directory')
         parser.add_argument('--root_namespace', metavar='NAME', help='the root namespace of the project')
@@ -70,6 +70,7 @@ class PTVSSuite(VSGSuite):
         parser.add_argument('--directory_in_filter', metavar='FILTER', nargs='*', help='one or more fnmatch expressions to match included directories')
         parser.add_argument('--directory_ex_filter', metavar='FILTER', nargs='*', help='one or more fnmatch expressions to match excluded directories')
         parser.add_argument('--is_windows_application', metavar='FLAG', type=bool, help='switch to use console python.exe or pythonw.exe.')
+        parser.add_argument('--environment_variable', metavar='PAIR', nargs='*', help='additional environment variables and values stored with the project')
         parser.add_argument('--python_interpreter_args', metavar='ARG', nargs='*', help='additional python interpreter arguments')
 
         return parser

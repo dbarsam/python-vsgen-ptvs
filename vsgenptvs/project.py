@@ -18,6 +18,7 @@ class PTVSProject(VSGProject, VSGWritable, VSGRegisterable, VSGJinjaRenderer):
 
     :ivar list  SearchPath:             The list of absolute directories that will be added to the Python search path; if not provide the value is [].
     :ivar bool  IsWindowsApplication:   The boolean flag to launch the application as a `.pyw` file or not; if not provide the value is False.
+    :ivar list  EnvironmentVariables:   The list of environment variables applied by the project; if not provide the value is [].
     :ivar list  PythonInterpreter:      The active interpreter. Either None or one of the values specified in PythonInterpreters or VirtualEnvironments; if not provide the value is None.
     :ivar list  PythonInterpreterArgs:  The active interpreter's arguments.  If not provide the value is [].
     :ivar list  PythonInterpreters:     The list of pyInterpreters that are base interpreters that will be available; if not provide the value is [].
@@ -48,6 +49,7 @@ class PTVSProject(VSGProject, VSGWritable, VSGRegisterable, VSGJinjaRenderer):
         super(PTVSProject, self)._import(datadict)
         self.SearchPath = datadict.get("SearchPath", [])
         self.IsWindowsApplication = datadict.get("IsWindowsApplication", False)
+        self.EnvironmentVariables = datadict.get("EnvironmentVariables", [])
         self.PythonInterpreter = datadict.get("PythonInterpreter", None)
         self.PythonInterpreterArgs = datadict.get("PythonInterpreterArgs", [])
         self.PythonInterpreters = datadict.get("PythonInterpreters", [])
@@ -67,7 +69,14 @@ class PTVSProject(VSGProject, VSGWritable, VSGRegisterable, VSGJinjaRenderer):
 
         p.SearchPath = config.getdirs(section, 'search_path', fallback=p.SearchPath)
         p.IsWindowsApplication = config.getboolean(section, 'is_windows_application', fallback=p.IsWindowsApplication)
+        p.EnvironmentVariables = config.getlist(section, 'environment_variables', fallback=p.EnvironmentVariables, delimiters='')
         p.PythonInterpreterArgs = config.getlist(section, 'python_interpreter_args', fallback=p.PythonInterpreterArgs)
+        
+        environment_sections = [es for es in p.EnvironmentVariables if config.has_section(es)]
+        for es in environment_sections:
+            p.EnvironmentVariables.remove(es)
+            for o in config.options(es):
+                p.EnvironmentVariables.append("{}={}".format(o, config.get(es, o, vars=os.environ)))
 
         interpreter = config.get(section, 'python_interpreter', fallback=None)
         interpreters = {n: [i for i in PTVSInterpreter.from_section(config, n, VSVersion=p.VSVersion)] for n in config.getlist(section, 'python_interpreters')}
