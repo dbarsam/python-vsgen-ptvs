@@ -240,7 +240,7 @@ class PTVSInterpreter(VSGRegisterable):
             vs_regkey_name = os.path.dirname(regkey_name)
             winreg.OpenKey(winreg.HKEY_CURRENT_USER, vs_regkey_name)
         except WindowsError as ex:
-            raise ValueError('Cannot resolve the registry path HKCU\%s for Visual Studio %s\'s PTVS.  Is PTVS installed?' % (vs_regkey_name, self.text(self.VSVersion)))
+            raise ValueError('Cannot resolve the registry path HKCU\\%s for Visual Studio %s\'s PTVS.  Is PTVS installed?' % (vs_regkey_name, self.text(self.VSVersion)))
 
         regkey = winreg.CreateKey(winreg.HKEY_CURRENT_USER, regkey_name)
         try:
