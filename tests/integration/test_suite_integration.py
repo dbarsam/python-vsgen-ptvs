@@ -94,5 +94,6 @@ class TestIntegrationDirectory(unittest.TestCase):
         result = __main__.main([__main__.__file__, 'auto', 'ptvs', '--root', self._root])
         self.assertEqual(result, 0)
 
+
 if __name__ == '__main__':
     unittest.main()

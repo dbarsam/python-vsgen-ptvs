@@ -34,6 +34,7 @@ def main(argv=[]):
     result = runner.run(testsuite)
     return 0 if not result.failures and not result.errors else 1
 
+
 if __name__ == '__main__':
     # To use this package as an application we need to correct the sys.path
     module_path = os.path.dirname(os.path.realpath(__file__))
