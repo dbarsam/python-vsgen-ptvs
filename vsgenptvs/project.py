@@ -73,10 +73,11 @@ class PTVSProject(VSGProject, VSGWritable, VSGRegisterable, VSGJinjaRenderer):
         p.PythonInterpreterArgs = config.getlist(section, 'python_interpreter_args', fallback=p.PythonInterpreterArgs)
 
         environment_sections = [es for es in p.EnvironmentVariables if config.has_section(es)]
+        environment_variable = {k:v.replace('$', '$$') for k, v in os.environ.items()}
         for es in environment_sections:
             p.EnvironmentVariables.remove(es)
             for o in config.options(es):
-                p.EnvironmentVariables.append("{}={}".format(o, config.get(es, o, vars=os.environ)))
+                p.EnvironmentVariables.append("{}={}".format(o, config.get(es, o, vars=environment_variable)))
 
         interpreter = config.get(section, 'python_interpreter', fallback=None)
         interpreters = {n: [i for i in PTVSInterpreter.from_section(config, n, VSVersion=p.VSVersion)] for n in config.getlist(section, 'python_interpreters')}
