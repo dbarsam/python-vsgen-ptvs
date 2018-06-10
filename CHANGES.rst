@@ -1,9 +1,15 @@
 Changelog
 =========
 
-1.0.0-dev_ (Unreleased)
------------------------
-- TBD
+Unreleased_
+-----------
+No changes committed.
+
+0.1.3_ (2018-06-09)
+-------------------
+Bug Fixes:
+
+- Fixed escape sequence in environment interpolation. Fixes #7.
 
 0.1.2_ (2018-05-31)
 -------------------
@@ -29,7 +35,8 @@ Features:
 ------------------
 - Initial Split from `VSGen 0.3.0`_.
 
+.. _0.1.3: https://github.com/dbarsam/python-vsgen-ptvs/compare/0.1.2...0.1.3
 .. _0.1.2: https://github.com/dbarsam/python-vsgen-ptvs/compare/0.1.1...0.1.2
 .. _0.1.1: https://github.com/dbarsam/python-vsgen-ptvs/compare/0.1.0...0.1.1
-.. _1.0.0-dev: https://github.com/dbarsam/python-vsgen-ptvs/compare/0.1.1...HEAD
+.. _unreleased: https://github.com/dbarsam/python-vsgen-ptvs/compare/0.1.3...HEAD
 .. _VSGen 0.3.0: https://github.com/dbarsam/python-vsgen/releases/tag/0.3.0
