@@ -24,7 +24,7 @@ class PTVSInterpreter(VSGRegisterable):
 
     :ivar uuid GUID:                    The GUID of the Python Interpreter; if not provided one is generated automatically.
     :ivar uuid BaseInterpreter:         The GUID of the base Python Interpreter (different if PTVSInterpreter is Virtual Environment); if not provided the value is :attr:`GUID`
-    :ivar str  Architecture:            The architecture (either x86 or Amd64). if not provide the value is "".
+    :ivar str  Architecture:            The architecture (either x86 or x64). if not provide the value is "".
     :ivar str  Version:                 The major.minor version string; if not provide the value is "".
     :ivar str  Description:             The human readable description string; if not provide the value is ""
     :ivar str  Path:                    The absolute path of the `python.exe`; if not provide the value is ""
@@ -46,6 +46,34 @@ class PTVSInterpreter(VSGRegisterable):
         """
         super(PTVSInterpreter, self).__init__()
         self._import(kwargs)
+
+    @staticmethod
+    def python_architecture(interpreter):
+        """
+        Returns the architecture of the Python interpreter.
+
+        :param str interpreter: Absolute path to `python.exe`.
+        :return:                Either 'x86' or 'x64' if succesful; None otherwise.
+        """
+        try:
+            out, err = subprocess.Popen([interpreter, '-c', 'import platform;print(\'x64\' if \'64bit\' in platform.architecture() else \'x86\')'], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+            return out.decode("utf-8").rstrip()
+        except BaseException:
+            return None
+
+    @staticmethod
+    def python_version(interpreter):
+        """
+        Returns the version of the Python interpreter.
+
+        :param str interpreter: Absolute path to `python.exe`.
+        :return:                The version text if succesful; None otherwise.
+        """
+        try:
+            out, err = subprocess.Popen([interpreter, '-c', 'import sys;print \'.\'.join(str(s) for s in sys.version_info[:2])'], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+            return out.decode("utf-8").rstrip()
+        except BaseException:
+            return None
 
     @classmethod
     def from_section(cls, config, section, **kwargs):
@@ -126,17 +154,13 @@ class PTVSInterpreter(VSGRegisterable):
         if os.path.exists(os.path.join(root, 'Lib')):
             args['LibraryPath'] = 'Lib\\'
 
-        try:
-            out, err = subprocess.Popen([python, '-c', 'import sys;print ".".join(str(s) for s in sys.version_info[:2])'], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-            args['Version'] = out.decode("utf-8").rstrip()
-        except Exception as e:
-            pass
+        version = cls.python_version(python)
+        if version:
+            args['Version'] = version
 
-        try:
-            out, err = subprocess.Popen([python, '-c', 'import platform; print "Amd64" if "64bit" in platform.architecture() else "x86"'], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-            args['Architecture'] = out.decode("utf-8").rstrip()
-        except Exception:
-            pass
+        architecture = cls.python_architecture(python)
+        if architecture:
+            args['Architecture'] = architecture
 
         interpreter = cls(**args)
         return interpreter
@@ -166,17 +190,13 @@ class PTVSInterpreter(VSGRegisterable):
         if os.path.exists(os.path.join(root, 'Lib')):
             args['LibraryPath'] = 'Lib\\'
 
-        try:
-            out, err = subprocess.Popen([python, '-c', 'import sys;print ".".join(str(s) for s in sys.version_info[:2])'], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-            args['Version'] = out.decode("utf-8").rstrip()
-        except Exception as e:
-            pass
+        version = cls.python_version(python)
+        if version:
+            args['Version'] = version
 
-        try:
-            out, err = subprocess.Popen([python, '-c', 'import platform; print "Amd64" if "64bit" in platform.architecture() else "x86"'], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-            args['Architecture'] = out.decode("utf-8").rstrip()
-        except Exception:
-            pass
+        architecture = cls.python_architecture(python)
+        if architecture:
+            args['Architecture'] = architecture
 
         interpreter = cls(**args)
         interpreter.resolve()
