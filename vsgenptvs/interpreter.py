@@ -31,7 +31,6 @@ class PTVSInterpreter(VSGRegisterable):
     :ivar str  Path:                    The absolute path of the `python.exe`; if not provide the value is ""
     :ivar str  InterpreterPath:         The relative path to self.Path of the `python.exe`; if not provide the value is ""
     :ivar str  WindowsInterpreterPath:  The relative path to self.Path of the `pythonw.exe`; if not provide the value is ""
-    :ivar str  LibraryPath:             The relative path to self.Path of the `Lib` folder that is part of the python.exe distribution; if not provide the value is "".
     :ivar str  PathEnvironmentVariable: The name of the environment variable to be uses as `PYTHONPATH`; if not provide the value is "PYTHONPATH".
     """
     __registerable_name__ = "Python Interpreter"
@@ -151,8 +150,6 @@ class PTVSInterpreter(VSGRegisterable):
         if os.path.exists(os.path.join(root, 'Scripts', 'pythonw.exe')):
             args['WindowsInterpreterPath'] = os.path.join('Scripts', 'pythonw.exe')
 
-        if os.path.exists(os.path.join(root, 'Lib')):
-            args['LibraryPath'] = 'Lib\\'
 
         version = cls.python_version(python)
         if version:
@@ -187,8 +184,6 @@ class PTVSInterpreter(VSGRegisterable):
         if os.path.exists(os.path.join(root, 'pythonw.exe')):
             args['WindowsInterpreterPath'] = 'pythonw.exe'
 
-        if os.path.exists(os.path.join(root, 'Lib')):
-            args['LibraryPath'] = 'Lib\\'
 
         version = cls.python_version(python)
         if version:
@@ -213,7 +208,6 @@ class PTVSInterpreter(VSGRegisterable):
         args = {}
         try:
             regkey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, keyname)
-            for k in ['Architecture', 'Description', 'InterpreterPath', 'LibraryPath', 'PathEnvironmentVariable', 'Version', 'WindowsInterpreterPath']:
                 args[k] = winreg.QueryValueEx(regkey, k)[0]
             winreg.CloseKey(regkey)
         except WindowsError as ex:
@@ -241,8 +235,6 @@ class PTVSInterpreter(VSGRegisterable):
         self.InterpreterAbsPath = datadict.get('InterpreterAbsPath', self.InterpreterPath if os.path.isabs(self.InterpreterPath) else os.path.abspath(os.path.join(self.Path, self.InterpreterPath)))
         self.WindowsInterpreterPath = datadict.get('WindowsInterpreterPath', "")
         self.WindowsInterpreterAbsPath = datadict.get('WindowsInterpreterAbsPath', self.WindowsInterpreterPath if os.path.isabs(self.WindowsInterpreterPath) else os.path.abspath(os.path.join(self.Path, self.WindowsInterpreterPath)))
-        self.LibraryPath = datadict.get('LibraryPath', "")
-        self.LibraryAbsPath = datadict.get('LibraryAbsPath', self.LibraryPath if os.path.isabs(self.LibraryPath) else os.path.abspath(os.path.join(self.Path, self.LibraryPath)))
         self.PathEnvironmentVariable = datadict.get('PathEnvironmentVariable', "PYTHONPATH")
         self.VSVersion = datadict.get('VSVersion', None)
 
@@ -297,7 +289,6 @@ class PTVSInterpreter(VSGRegisterable):
             winreg.SetValueEx(regkey, 'Architecture', 0, winreg.REG_SZ, self.Architecture)
             winreg.SetValueEx(regkey, 'Description', 0, winreg.REG_SZ, self.Description)
             winreg.SetValueEx(regkey, 'InterpreterPath', 0, winreg.REG_SZ, self.InterpreterAbsPath)
-            winreg.SetValueEx(regkey, 'LibraryPath', 0, winreg.REG_SZ, self.LibraryAbsPath)
             winreg.SetValueEx(regkey, 'Version', 0, winreg.REG_SZ, self.Version)
             winreg.SetValueEx(regkey, 'WindowsInterpreterPath', 0, winreg.REG_SZ, self.WindowsInterpreterAbsPath)
             winreg.SetValueEx(regkey, 'PathEnvironmentVariable', 0, winreg.REG_SZ, self.PathEnvironmentVariable)
