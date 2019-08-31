@@ -3,6 +3,7 @@
 This module provides the neccessary project defintions for VSGDemo's PTVS projects
 """
 import os
+from vsgenptvs.interpreter import PTVSInterpreter
 from vsgendemo.base import VSGDemoBaseProject
 from vsgendemo.settings import VSGDemoSettings
 
@@ -15,6 +16,11 @@ class VSGProject(VSGDemoBaseProject):
 
     def __init__(self, **kwargs):
         super(VSGProject, self).__init__('VSG', self.RootPath, **kwargs)
+
+        if os.path.isdir(VSGDemoSettings.VE2Path):
+            self.VirtualEnvironments.append(PTVSInterpreter.from_virtual_environment(VSGDemoSettings.VE2Path, VSVersion=self.VSVersion))
+        if os.path.isdir(VSGDemoSettings.VE3Path):
+            self.VirtualEnvironments.append(PTVSInterpreter.from_virtual_environment(VSGDemoSettings.VE3Path, VSVersion=self.VSVersion))
 
     def initialize(self):
         """
@@ -31,6 +37,11 @@ class VSGDemoProject(VSGDemoBaseProject):
 
     def __init__(self, **kwargs):
         super(VSGDemoProject, self).__init__('VSGDemo', self.RootPath, **kwargs)
+
+        if os.path.isdir(VSGDemoSettings.VE2Path):
+            self.VirtualEnvironments.append(PTVSInterpreter.from_virtual_environment(VSGDemoSettings.VE2Path, VSVersion=self.VSVersion))
+        if os.path.isdir(VSGDemoSettings.VE3Path):
+            self.VirtualEnvironments.append(PTVSInterpreter.from_virtual_environment(VSGDemoSettings.VE3Path, VSVersion=self.VSVersion))
 
     def initialize(self):
         """

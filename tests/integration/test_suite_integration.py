@@ -6,8 +6,16 @@ import os
 import unittest
 import shutil
 import logging
+import subprocess
+import sys
 
 from vsgen import __main__
+
+#: Local path to Python 2 Virtual Environment
+PYTHON2_VE = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data', '_ve2'))
+
+#: Local path to Python 3 Virtual Environment
+PYTHON3_VE = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data', '_ve3'))
 
 
 def setUpModule():
@@ -16,11 +24,32 @@ def setUpModule():
     """
     logging.disable(logging.CRITICAL)
 
+    # Create a Python 2 Virtual Environment    
+    try:
+        import virtualenv
+        # Note:  We can't create it from virtualenv API so launch an external process.
+        subprocess.Popen([sys.executable, '-m', 'virtualenv', PYTHON2_VE], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    except ImportError:
+        pass
+
+    # Create a Python 3 Virtual Environment
+    try:
+        import venv
+        venv.main([PYTHON3_VE])
+    except ImportError:
+        pass
+
 
 def tearDownModule():
     """
     The module specific tearDown method
     """
+    if os.path.isdir(PYTHON2_VE):
+        shutil.rmtree(PYTHON2_VE)
+
+    if os.path.isdir(PYTHON3_VE):
+        shutil.rmtree(PYTHON3_VE)
+
     logging.disable(logging.NOTSET)
 
 
@@ -33,6 +62,8 @@ class TestIntegrationConfigurationFile(unittest.TestCase):
         """
         The class specific setUp method
         """
+        self.assertTrue(os.path.isdir(PYTHON2_VE) or os.path.isdir(PYTHON3_VE), 'Test data\'s virtual environment(s) do not exist at {} or {}.'.format(PYTHON2_VE, PYTHON3_VE))
+
         self._data = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data'))
         self.assertTrue(os.path.isdir(self._data), 'Test data directory "{}" does not exist'.format(self._data))
 

@@ -20,3 +20,7 @@ class VSGDemoSettings(object):
     # PTVS Output Directories
     SolutionRoot = os.path.join(BuildRoot, '_projects', 'vsgendemo', )
     ProjectRoot = os.path.join(BuildRoot, '_projects', 'vsgendemo', 'projs')
+
+    # Virtual Environments
+    VE2Path = os.path.join(MainRoot, 'tests', 'data', '_ve2')
+    VE3Path = os.path.join(MainRoot, 'tests', 'data', '_ve3')
