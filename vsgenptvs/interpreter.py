@@ -24,7 +24,6 @@ class PTVSInterpreter(VSGRegisterable):
     PTVSInterpreter encapsulates the logic and data used to describe a Python interpreter or virtual environments
 
     :ivar uuid GUID:                    The GUID of the Python Interpreter; if not provided one is generated automatically.
-    :ivar uuid BaseInterpreter:         The GUID of the base Python Interpreter (different if PTVSInterpreter is Virtual Environment); if not provided the value is :attr:`GUID`
     :ivar str  Architecture:            The architecture (either x86 or x64). if not provide the value is "".
     :ivar str  Version:                 The major.minor version string; if not provide the value is "".
     :ivar str  Description:             The human readable description string; if not provide the value is ""
@@ -137,19 +136,13 @@ class PTVSInterpreter(VSGRegisterable):
                         if key == 'home':
                             basedir = value
 
-        baseinterpretter = cls.from_python_installation(basedir, **kwargs)
-        if not baseinterpretter:
-            return None
-
         args = kwargs.copy()
         args['Path'] = root
-        args['BaseInterpreter'] = baseinterpretter.GUID
+        args['Id'] = os.path.basename(root)
         args['InterpreterPath'] = os.path.join('Scripts', 'python.exe')
-        args.setdefault('Description', '{} ({})'.format(os.path.basename(root), baseinterpretter.Description))
 
         if os.path.exists(os.path.join(root, 'Scripts', 'pythonw.exe')):
             args['WindowsInterpreterPath'] = os.path.join('Scripts', 'pythonw.exe')
-
 
         version = cls.python_version(python)
         if version:
@@ -158,6 +151,8 @@ class PTVSInterpreter(VSGRegisterable):
         architecture = cls.python_architecture(python)
         if architecture:
             args['Architecture'] = architecture
+
+        args['Description'] = '{} (Python {} ({}))'.format(os.path.basename(root), args.get('Version', 'Unknown'), args.get('Architecture', 'Unknown'))
 
         interpreter = cls(**args)
         return interpreter
@@ -208,6 +203,7 @@ class PTVSInterpreter(VSGRegisterable):
         args = {}
         try:
             regkey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, keyname)
+            for k in ['Architecture', 'Description', 'InterpreterPath', 'PathEnvironmentVariable', 'Version', 'WindowsInterpreterPath']:
                 args[k] = winreg.QueryValueEx(regkey, k)[0]
             winreg.CloseKey(regkey)
         except WindowsError as ex:
@@ -226,7 +222,6 @@ class PTVSInterpreter(VSGRegisterable):
         :param dict datadict: The dictionary containing variables values.
         """
         self.GUID = datadict.get('Id', uuid.uuid1())
-        self.BaseInterpreter = datadict.get('BaseInterpreter', self.GUID)
         self.Architecture = datadict.get('Architecture', "")
         self.Version = datadict.get('Version', "")
         self.Path = datadict.get('Path', "")
@@ -262,7 +257,6 @@ class PTVSInterpreter(VSGRegisterable):
                 interpreter = self.from_registry_key(interpreter_regkey_name)
                 if interpreter and interpreter.InterpreterAbsPath.lower() == self.InterpreterAbsPath.lower():
                     self.GUID = uuid.UUID(interpreter.GUID)
-                    self.BaseInterpreter = self.GUID
                     break
         except WindowsError as ex:
             pass

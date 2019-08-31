@@ -24,7 +24,7 @@
     <LaunchProvider>Standard Python launcher</LaunchProvider>
 {% if pyproj.ProjectInterpreterDefault: %}
     <InterpreterId>{{pyproj.ProjectInterpreterDefault.GUID|MSGUID}}</InterpreterId>
-    <InterpreterVersion>{{pyproj.ProjectInterpreterDefault.Version}}</InterpreterVersion>    
+    <InterpreterVersion>{{pyproj.ProjectInterpreterDefault.Version}}</InterpreterVersion>
 {% endif %}
 {% if pyproj.CommandLineArguments %}
     <SearchPath>{{pyproj.CommandLineArguments|join(' ')}}</SearchPath>
@@ -67,7 +67,7 @@
 {% if pyproj.PythonInterpreters %}
   <ItemGroup>
 {% for interpreter in pyproj.PythonInterpreters %}
-    <InterpreterReference Include="{{interpreter.BaseInterpreter|MSGUID}}\{{interpreter.Version}}" />
+    <InterpreterReference Include="Global|{{interpreter.ID}}|{{interpreter.Version}}" />
 {% endfor %}
   </ItemGroup>
 {% endif %}
@@ -75,9 +75,8 @@
   <ItemGroup>
 {% for venv in pyproj.VirtualEnvironments %}
     <Interpreter Include="{{venv.Path|relprojhome}}">
-      <Id>{{venv.GUID|MSGUID}}</Id>
+      <Id>{{venv.ID}}</Id>
       <Description>{{venv.Description}}</Description>
-      <BaseInterpreter>{{venv.GUID|MSGUID}}</BaseInterpreter>
       <InterpreterPath>{{venv.InterpreterPath}}</InterpreterPath>
       <WindowsInterpreterPath>{{venv.WindowsInterpreterPath}}</WindowsInterpreterPath>
       <Version>{{venv.Version}}</Version>
