@@ -7,6 +7,7 @@ import os
 import re
 import csv
 import site
+import io
 import fnmatch
 import uuid
 import subprocess
@@ -128,13 +129,12 @@ class PTVSInterpreter(VSGRegisterable):
                 basedir = next((line.rstrip() for line in f), None)
 
         if os.path.exists(pyvenvcfg):
-            config_line = re.compile(site.CONFIG_LINE)
-            with open(pyvenvcfg, encoding='utf-8') as f:
+            with io.open(pyvenvcfg, encoding='utf-8') as f:
                 for line in f:
-                    m = config_line.match(line.rstrip())
-                    if m:
-                        d = m.groupdict()
-                        key, value = d['key'].lower(), d['value']
+                    if '=' in line:
+                        key, _, value = line.partition('=')
+                        key = key.strip().lower()
+                        value = value.strip()
                         if key == 'home':
                             basedir = value
 
