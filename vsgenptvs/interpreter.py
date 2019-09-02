@@ -23,7 +23,7 @@ class PTVSInterpreter(VSGRegisterable):
     """
     PTVSInterpreter encapsulates the logic and data used to describe a Python interpreter or virtual environments
 
-    :ivar uuid GUID:                    The GUID of the Python Interpreter; if not provided one is generated automatically.
+    :ivar str  ID:                      The Visual Studio ID the Python Interpreter; if not provided one is generated automatically.
     :ivar str  Architecture:            The architecture (either x86 or x64). if not provide the value is "".
     :ivar str  Version:                 The major.minor version string; if not provide the value is "".
     :ivar str  Description:             The human readable description string; if not provide the value is ""
@@ -34,8 +34,17 @@ class PTVSInterpreter(VSGRegisterable):
     """
     __registerable_name__ = "Python Interpreter"
 
-    #: PTVS Interpreter Registry Location
-    _regkey_name = r'Software\Microsoft\VisualStudio\{VSVersion}\PythonTools\Interpreters'
+    #: Official WIndows Registry Keys for Python environments.
+    __global_interpreter_keys__ = [
+        (winreg.HKEY_CURRENT_USER, r'Software\Python', winreg.KEY_WOW64_64KEY),
+        (winreg.HKEY_CURRENT_USER, r'Software\Python', winreg.KEY_WOW64_32KEY),
+        (winreg.HKEY_LOCAL_MACHINE, r'Software\Python', winreg.KEY_WOW64_64KEY),
+        (winreg.HKEY_LOCAL_MACHINE, r'Software\Python', winreg.KEY_WOW64_32KEY),
+    ]
+
+    #: PTVS Custom Interpreter Registry Location
+    __ptvs_interpreter_key__ = (winreg.HKEY_CURRENT_USER, r'Software\Python\VisualStudio', winreg.KEY_WOW64_64KEY)
+
 
     def __init__(self, **kwargs):
         """
@@ -89,13 +98,14 @@ class PTVSInterpreter(VSGRegisterable):
             raise ValueError('Section [{}] not found in [{}]'.format(section, ', '.join(config.sections())))
 
         interpreters = []
-
         interpreter_paths = config.getdirs(section, 'interpreter_paths', fallback=[])
         environment_paths = config.getdirs(section, 'environment_paths', fallback=[])
         if interpreter_paths:
-            interpreters = filter(None, [PTVSInterpreter.from_python_installation(p, **kwargs) for p in interpreter_paths])
+            interpreter_objects = (PTVSInterpreter.from_python_installation(p, **kwargs) for p in interpreter_paths)
+            interpreters = list(filter(None, interpreter_objects))
         elif environment_paths:
-            interpreters = filter(None, [PTVSInterpreter.from_virtual_environment(p, **kwargs) for p in environment_paths])
+            interpreter_objects = (PTVSInterpreter.from_virtual_environment(p, **kwargs) for p in environment_paths)
+            interpreters = list(filter(None, interpreter_objects))
 
         for i in interpreters:
             i.Description = config.get(section, 'description', fallback=i.Description)
@@ -138,7 +148,7 @@ class PTVSInterpreter(VSGRegisterable):
 
         args = kwargs.copy()
         args['Path'] = root
-        args['Id'] = os.path.basename(root)
+        args['ID'] = os.path.basename(root)
         args['InterpreterPath'] = os.path.join('Scripts', 'python.exe')
 
         if os.path.exists(os.path.join(root, 'Scripts', 'pythonw.exe')):
@@ -166,6 +176,13 @@ class PTVSInterpreter(VSGRegisterable):
         :param kwargs:  List of additional keyworded arguments to be passed into the :class:`~vsgenptvs.interpreter.PTVSInterpreter`.
         :return:          A valid :class:`~vsgenptvs.interpreter.PTVSInterpreter` instance if succesful; None otherwise.
         """
+
+        # First check the installations in the registry
+        interpreter = cls.from_registry_installation(directory, **kwargs)
+        if interpreter:
+            return interpreter
+
+        # Manually Create
         root = os.path.abspath(directory)
         python = os.path.abspath(os.path.join(root, 'python.exe'))
         if not os.path.exists(python):
@@ -179,7 +196,6 @@ class PTVSInterpreter(VSGRegisterable):
         if os.path.exists(os.path.join(root, 'pythonw.exe')):
             args['WindowsInterpreterPath'] = 'pythonw.exe'
 
-
         version = cls.python_version(python)
         if version:
             args['Version'] = version
@@ -189,31 +205,97 @@ class PTVSInterpreter(VSGRegisterable):
             args['Architecture'] = architecture
 
         interpreter = cls(**args)
-        interpreter.resolve()
         return interpreter
 
     @classmethod
-    def from_registry_key(cls, keyname):
+    def from_registry_installation(cls, directory, **kwargs):
         """
-        Creates a :class:`~vsgenptvs.interpreter.PTVSInterpreter` from a single registry key.
+        Creates a :class:`~vsgenptvs.interpreter.PTVSInterpreter` from an Python installation in the registered in the Windows registry.
 
-        :param str keyname:  The keyname under `HKEY_CURRENT_USER` referring to the environment.
-        :return:         A valid :class:`~vsgenptvs.interpreter.PTVSInterpreter` instance if succesful; None otherwise.
+        :param str directory: The absolute path to the python installation directory.
+        :param kwargs:  List of additional keyworded arguments to be passed into the :class:`~vsgenptvs.interpreter.PTVSInterpreter`.
+        :return:   A valid :class:`~vsgenptvs.interpreter.PTVSInterpreter` instance if succesful; None otherwise.
         """
+        def enum_keys(key):
+            i = 0
+            while True:
+                try:
+                    yield winreg.EnumKey(key, i)
+                except OSError:
+                    break
+                i += 1
+
+        path = os.path.normpath(directory).lower()
+        for hive, key, flag in cls.__global_interpreter_keys__:
+            with winreg.OpenKeyEx(hive, key, access=winreg.KEY_READ | flag) as root_key:
+                for company in enum_keys(root_key):
+                    with winreg.OpenKey(root_key, company) as company_key:
+                        for tag in enum_keys(company_key):
+                            interpreter = cls.from_registry_key(hive, os.path.join(key, company, tag), flag, **kwargs)
+                            if interpreter and interpreter.Path.lower() == path:
+                                return interpreter
+        return None
+
+    @classmethod
+    def from_registry_key(cls, hive, key, flag, **kwargs):
+        """
+        Creates a :class:`~vsgenptvs.interpreter.PTVSInterpreter` from a PEP-514 `registry key <https://www.python.org/dev/peps/pep-0514>`_.
+
+        :param obj hive:  One of the `HKEY constants <https://docs.python.org/3/library/winreg.html#hkey-constants>`_.
+        :param str key:   The keyname under `hive` referring to the Python environment.
+        :param int flag:  The windows registry access mask value.
+        :param kwargs:  List of additional keyworded arguments to be passed into the :class:`~vsgenptvs.interpreter.PTVSInterpreter`.
+        :return:          A valid :class:`~vsgenptvs.interpreter.PTVSInterpreter` instance if succesful; None otherwise.
+        """
+        tag = os.path.basename(key)
+        company = os.path.basename(os.path.dirname(key))
+
+        regkeys = {
+            key : [
+                'SysArchitecture',
+                'SysVersion',
+                'Version',
+                'SupportUrl',
+                'DisplayName'
+            ],
+            os.path.join(key, 'InstallPath') : [
+                'ExecutablePath',
+                'ExecutableArguments',
+                'WindowedExecutablePath',
+                'WindowedExecutableArguments'
+            ]
+        }
+
+        mapping = {
+            'Architecture':'SysArchitecture',
+            'Version':'SysVersion',
+            'PathEnvironmentVariable' : 'PathEnvironmentVariable',
+            'Description' : 'DisplayName',
+            'InterpreterPath': 'ExecutablePath',
+            'WindowsInterpreterPath' : 'WindowedExecutablePath'
+        }
+
+        regvalues = {}
+        for regkey, value_names in regkeys.items():
+            with winreg.OpenKeyEx(hive, regkey, access=winreg.KEY_READ | flag) as subkey:
+                for value_name in sorted(value_names):
+                    try:
+                        regvalues[value_name], _ = winreg.QueryValueEx(subkey, value_name)
+                    except FileNotFoundError as e:
+                        regvalues[value_name] = None
         args = {}
-        try:
-            regkey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, keyname)
-            for k in ['Architecture', 'Description', 'InterpreterPath', 'PathEnvironmentVariable', 'Version', 'WindowsInterpreterPath']:
-                args[k] = winreg.QueryValueEx(regkey, k)[0]
-            winreg.CloseKey(regkey)
-        except WindowsError as ex:
-            pass
+        for k, v in  mapping.items():
+            if v in regvalues and regvalues[v]:
+                args[k] = regvalues[v]
 
+        args['ID'] = "Global|{}|{}".format(company, tag)
         if 'InterpreterPath' in args:
             args['Path'] = os.path.dirname(args['InterpreterPath'])
-            args['Id'] = os.path.basename(keyname)[1:-1]
-            return cls(**args)
-        return None
+
+        args.update(kwargs)
+
+        return cls(**args)
+
 
     def _import(self, datadict):
         """
@@ -221,7 +303,7 @@ class PTVSInterpreter(VSGRegisterable):
 
         :param dict datadict: The dictionary containing variables values.
         """
-        self.GUID = datadict.get('Id', uuid.uuid1())
+        self.ID = datadict.get('ID', "")
         self.Architecture = datadict.get('Architecture', "")
         self.Version = datadict.get('Version', "")
         self.Path = datadict.get('Path', "")
@@ -233,60 +315,32 @@ class PTVSInterpreter(VSGRegisterable):
         self.PathEnvironmentVariable = datadict.get('PathEnvironmentVariable', "PYTHONPATH")
         self.VSVersion = datadict.get('VSVersion', None)
 
-    def resolve(self):
-        """
-        Resolves the environment with one already existing in the windows registry.
-
-        :note: We're explictly writing the environment to the registry to facilitate sharing so to avoid duplication we try to match the environment to an existing one first.
-        """
-        if not self.VSVersion:
-            raise ValueError('Cannot resolve interpreter with invalid Visual Studio Version')
-
-        regkey_name = self._regkey_name.format(VSVersion=self.VSVersion)
-        try:
-            vs_regkey_name = os.path.dirname(regkey_name)
-            winreg.OpenKey(winreg.HKEY_CURRENT_USER, vs_regkey_name)
-        except WindowsError as ex:
-            raise ValueError('Cannot resolve the registry path HKCU\\%s for Visual Studio %s\'s PTVS.  Is PTVS installed?' % (vs_regkey_name, self.text(self.VSVersion)))
-
-        regkey = winreg.CreateKey(winreg.HKEY_CURRENT_USER, regkey_name)
-        try:
-            reginfo = winreg.QueryInfoKey(regkey)
-            for i in range(reginfo[0]):
-                interpreter_regkey_name = '{0}\\{1}'.format(regkey_name, winreg.EnumKey(regkey, i))
-                interpreter = self.from_registry_key(interpreter_regkey_name)
-                if interpreter and interpreter.InterpreterAbsPath.lower() == self.InterpreterAbsPath.lower():
-                    self.GUID = uuid.UUID(interpreter.GUID)
-                    break
-        except WindowsError as ex:
-            pass
-
     def register(self):
         """
         Registers the environment into the windows registry.
 
         :note: We're explictly writing the environment to the registry to facilitate sharing. See `How to share pyproj across team with custom environments <https://pytools.codeplex.com/workitem/2765>`_ for motivation.
         """
-        if not self.VSVersion:
-            raise ValueError('Cannot register interpreter with invalid Visual Studio Version')
-
-        regkey_name = self._regkey_name.format(VSVersion=self.VSVersion)
+        hive, key, flag = self.__ptvs_interpreter_key__
+        tag = self.Description
+        keyvalues = {
+            os.path.join(key, tag) : {
+                'SysArchitecture' : self.Architecture,
+                'SysVersion' : self.Version,
+                'DisplayName' : self.Description,
+                'PathEnvironmentVariable' : 'PYTHONPATH'
+            },
+            os.path.join(key, tag, 'InstallPath') : {
+                'ExecutablePath' :self.InterpreterAbsPath,
+                'WindowedExecutablePath': self.WindowsInterpreterAbsPath,
+            }
+        }
         try:
-            vs_regkey_name = os.path.dirname(regkey_name)
-            winreg.OpenKey(winreg.HKEY_CURRENT_USER, vs_regkey_name)
-        except WindowsError as ex:
-            raise ValueError('Cannot register interpreter with Visual Studio %s that is not installed.' % self.text(self.VSVersion))
-
-        interpreter_regkey_name = '{0}\\{{{1}}}'.format(regkey_name, self.lower(self.GUID))
-        try:
-            regkey = winreg.CreateKey(winreg.HKEY_CURRENT_USER, interpreter_regkey_name)
-            winreg.SetValueEx(regkey, 'Architecture', 0, winreg.REG_SZ, self.Architecture)
-            winreg.SetValueEx(regkey, 'Description', 0, winreg.REG_SZ, self.Description)
-            winreg.SetValueEx(regkey, 'InterpreterPath', 0, winreg.REG_SZ, self.InterpreterAbsPath)
-            winreg.SetValueEx(regkey, 'Version', 0, winreg.REG_SZ, self.Version)
-            winreg.SetValueEx(regkey, 'WindowsInterpreterPath', 0, winreg.REG_SZ, self.WindowsInterpreterAbsPath)
-            winreg.SetValueEx(regkey, 'PathEnvironmentVariable', 0, winreg.REG_SZ, self.PathEnvironmentVariable)
-            winreg.CloseKey(regkey)
-        except WindowsError as ex:
+            for key, values in keyvalues.items():
+                with winreg.CreateKeyEx(hive, key, access=winreg.KEY_WRITE | flag) as regkey:
+                    for k, v in values.items():
+                        winreg.SetValueEx(regkey, k, 0, winreg.REG_SZ, v)
+        except WindowsError:
             return False
+        self.ID = "Global|VisualStudio|{}".format(company, tag)
         return True
