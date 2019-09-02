@@ -45,7 +45,6 @@ class PTVSInterpreter(VSGRegisterable):
     #: PTVS Custom Interpreter Registry Location
     __ptvs_interpreter_key__ = (winreg.HKEY_CURRENT_USER, r'Software\Python\VisualStudio', winreg.KEY_WOW64_64KEY)
 
-
     def __init__(self, **kwargs):
         """
         Constructor.
@@ -251,14 +250,14 @@ class PTVSInterpreter(VSGRegisterable):
         company = os.path.basename(os.path.dirname(key))
 
         regkeys = {
-            key : [
+            key: [
                 'SysArchitecture',
                 'SysVersion',
                 'Version',
                 'SupportUrl',
                 'DisplayName'
             ],
-            os.path.join(key, 'InstallPath') : [
+            os.path.join(key, 'InstallPath'): [
                 'ExecutablePath',
                 'ExecutableArguments',
                 'WindowedExecutablePath',
@@ -267,12 +266,12 @@ class PTVSInterpreter(VSGRegisterable):
         }
 
         mapping = {
-            'Architecture':'SysArchitecture',
-            'Version':'SysVersion',
-            'PathEnvironmentVariable' : 'PathEnvironmentVariable',
-            'Description' : 'DisplayName',
+            'Architecture': 'SysArchitecture',
+            'Version': 'SysVersion',
+            'PathEnvironmentVariable': 'PathEnvironmentVariable',
+            'Description': 'DisplayName',
             'InterpreterPath': 'ExecutablePath',
-            'WindowsInterpreterPath' : 'WindowedExecutablePath'
+            'WindowsInterpreterPath': 'WindowedExecutablePath'
         }
 
         regvalues = {}
@@ -284,7 +283,7 @@ class PTVSInterpreter(VSGRegisterable):
                     except FileNotFoundError as e:
                         regvalues[value_name] = None
         args = {}
-        for k, v in  mapping.items():
+        for k, v in mapping.items():
             if v in regvalues and regvalues[v]:
                 args[k] = regvalues[v]
 
@@ -295,7 +294,6 @@ class PTVSInterpreter(VSGRegisterable):
         args.update(kwargs)
 
         return cls(**args)
-
 
     def _import(self, datadict):
         """
@@ -324,14 +322,14 @@ class PTVSInterpreter(VSGRegisterable):
         hive, key, flag = self.__ptvs_interpreter_key__
         tag = self.Description
         keyvalues = {
-            os.path.join(key, tag) : {
-                'SysArchitecture' : self.Architecture,
-                'SysVersion' : self.Version,
-                'DisplayName' : self.Description,
-                'PathEnvironmentVariable' : 'PYTHONPATH'
+            os.path.join(key, tag): {
+                'SysArchitecture': self.Architecture,
+                'SysVersion': self.Version,
+                'DisplayName': self.Description,
+                'PathEnvironmentVariable': 'PYTHONPATH'
             },
-            os.path.join(key, tag, 'InstallPath') : {
-                'ExecutablePath' :self.InterpreterAbsPath,
+            os.path.join(key, tag, 'InstallPath'): {
+                'ExecutablePath': self.InterpreterAbsPath,
                 'WindowedExecutablePath': self.WindowsInterpreterAbsPath,
             }
         }

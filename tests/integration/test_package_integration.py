@@ -25,7 +25,7 @@ def setUpModule():
     """
     logging.disable(logging.CRITICAL)
 
-    # Create a Python 2 Virtual Environment    
+    # Create a Python 2 Virtual Environment
     try:
         import virtualenv
         # Note:  We can't create it from virtualenv API so launch an external process.
