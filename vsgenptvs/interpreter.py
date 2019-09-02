@@ -69,7 +69,7 @@ class PTVSInterpreter(VSGRegisterable):
         :return:                The version text if succesful; None otherwise.
         """
         try:
-            out, err = subprocess.Popen([interpreter, '-c', 'import sys;print \'.\'.join(str(s) for s in sys.version_info[:2])'], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+            out, err = subprocess.Popen([interpreter, '-c', 'import sys;print(\'.\'.join(str(s) for s in sys.version_info[:2]))'], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
             return out.decode("utf-8").rstrip()
         except BaseException:
             return None
