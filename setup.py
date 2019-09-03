@@ -17,7 +17,7 @@ INSTALL_REQUIREMENTS = [
 
 TEST_REQUIREMENTS = [
     'vsgen',
-    'pep8'
+    'pycodestyle'
 ]
 
 # Pre-install pylint in Python 3 at 1.6.5 as a
