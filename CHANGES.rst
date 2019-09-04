@@ -5,6 +5,12 @@ Unreleased_
 -----------
 No changes committed.
 
+0.1.4_ (2019-09-01)
+-------------------
+Features:
+
+- Migreated project to Visual Studio 2019 / 2017.  Fixes #8.
+
 0.1.3_ (2018-06-09)
 -------------------
 Bug Fixes:
@@ -35,6 +41,7 @@ Features:
 ------------------
 - Initial Split from `VSGen 0.3.0`_.
 
+.. _0.1.4: https://github.com/dbarsam/python-vsgen-ptvs/compare/0.1.3...0.1.4
 .. _0.1.3: https://github.com/dbarsam/python-vsgen-ptvs/compare/0.1.2...0.1.3
 .. _0.1.2: https://github.com/dbarsam/python-vsgen-ptvs/compare/0.1.1...0.1.2
 .. _0.1.1: https://github.com/dbarsam/python-vsgen-ptvs/compare/0.1.0...0.1.1
